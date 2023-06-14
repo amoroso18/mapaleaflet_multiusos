@@ -1,7 +1,9 @@
 /**
  * geocoding addresses search engine outside the map
  */
-
+const mapa_lat = document.getElementById('mapa_lat');
+const mapa_lng = document.getElementById('mapa_lng');
+const mapa_dir = document.getElementById('mapa_dir');
 window.addEventListener("DOMContentLoaded", function () {
   // Autocomplete
   new Autocomplete("search", {
@@ -48,15 +50,16 @@ window.addEventListener("DOMContentLoaded", function () {
       const { display_name } = object.properties;
       const cord = object.geometry.coordinates;
       // custom id for marker
-      add_marker_custom(cord,display_name)
+    
       // borrar
-      // map.eachLayer(function (layer) {
-      //   if (layer.options && layer.options.pane === "markerPane") {
-      //     if (layer.options.id !== customId) {
-      //       map.removeLayer(layer);
-      //     }
-      //   }
-      // });
+      map.eachLayer(function (layer) {
+        if (layer.options && layer.options.pane === "markerPane") {
+          if (layer.options.id !== customId) {
+            map.removeLayer(layer);
+          }
+        }
+      });
+      add_marker_custom(cord,display_name)
     },
   });
 
@@ -74,6 +77,10 @@ window.addEventListener("DOMContentLoaded", function () {
       ${[cord[1], cord[0]]}
     `);
     map.setView([cord[1], cord[0]], 13);
+ 
+    mapa_lat.value = cord[1];
+    mapa_lng.value = cord[0];
+    mapa_dir.value = display_name;
 
     marker.on('dragend', function (e) {
       console.log(e.target);
@@ -88,7 +95,10 @@ window.addEventListener("DOMContentLoaded", function () {
           const container = "Dirección no encontrada";
         }
         const container = `${result.address.Match_addr}<br>${coords.lat} ${coords.lng}`;
-        marker.addTo(map).bindPopup(container).openPopup();;
+        marker.addTo(map).bindPopup(container).openPopup();
+        mapa_lat.value = coords.lat;
+        mapa_lng.value = coords.lng;
+        mapa_dir.value = result.address.Match_addr;
       });
 
       });
@@ -114,7 +124,7 @@ window.addEventListener("DOMContentLoaded", function () {
   // Most tile servers require attribution, which you can set under `Layer`
   L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
     attribution:
-      '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors & Dev.AECC',
   }).addTo(map);
 
 });
