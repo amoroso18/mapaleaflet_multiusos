@@ -49,25 +49,39 @@ window.addEventListener("DOMContentLoaded", function () {
     onSubmit: ({ object }) => {
       const { display_name } = object.properties;
       const cord = object.geometry.coordinates;
-      // custom id for marker
-    
-      // borrar
-      map.eachLayer(function (layer) {
-        if (layer.options && layer.options.pane === "markerPane") {
-          if (layer.options.id !== customId) {
-            map.removeLayer(layer);
-          }
-        }
-      });
+      // borrar un solo marker
+      if(marker){
+        map.removeLayer(marker);
+      }
+      // borrar todos los marker
+      // map.eachLayer(function (layer) {
+      //   if (layer instanceof L.Marker) {
+      //     map.removeLayer(layer);
+      //   }
+      // });
+      // borrar marker especifico
+      // map.eachLayer(function (layer) {
+      //   if (layer.options && layer.options.pane === "markerPane") {
+      //     if (layer.options.id !== customId) {
+      //       map.removeLayer(layer);
+      //     }
+      //   }
+      // });
       add_marker_custom(cord,display_name)
     },
   });
 
-  var idmarker = 1;
+  // para un solo marcador
+  var oneMarker = 1;
+  var marker;
+
+  // varios marker
+  var markerCorrelativo = 1;
+  var markers;
   function add_marker_custom(cord,display_name){
-    const marker = L.marker([cord[1], cord[0]], {
+     marker = L.marker([cord[1], cord[0]], {
       title: display_name,
-      id: idmarker,
+      id: oneMarker,
       draggable: true,
       autoPan: true
     });
@@ -102,7 +116,6 @@ window.addEventListener("DOMContentLoaded", function () {
       });
 
       });
-    idmarker++;
   }
 
   // MAP
